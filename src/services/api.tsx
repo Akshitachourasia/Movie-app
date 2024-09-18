@@ -6,17 +6,14 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "https://www.omdbapi.com/" }),
   endpoints: (builder) => ({
     getMovies: builder.query({
-      query: (movieText) => `?apikey=${APIKey}&s=${movieText}&type=movie`,
+      query: (search) => `?apikey=${APIKey}&s=${search}&type=movie`,
     }),
     getSeries: builder.query({
-      query: (seriesText) => `?apikey=${APIKey}&s=${seriesText}&type=series`,
+      query: (search) => `?apikey=${APIKey}&s=${search}&type=series`,
     }),
     getMoviesorSeriesDetails: builder.query({
-      query: (id) => `?apikey=${APIKey}&i=${id}&Plot=full`, // Ensure the API URL is correct
+      query: (id) => `?apikey=${APIKey}&i=${id}&Plot=full`,
     }),
-    // getEpisode: builder.query({
-    //   query: (episodeText) => `?apikey=${APIKey}&s=${episodeText}&type=episode`,
-    // }),
   }),
 });
 export const { useGetMoviesQuery, useGetSeriesQuery, useGetMoviesorSeriesDetailsQuery } = api;

@@ -1,12 +1,16 @@
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import Slider from "react-slick";
+import settings from "../../comman/settings";
+import MovieDetails from "../movie-details/movie-details";
 import { useGetMoviesQuery, useGetSeriesQuery } from "../../services/api";
-import { useEffect } from "react";
 import { addMovies, addSeries } from "../../features/movies/movie-slice";
 import "./home.scss";
-import { Link } from "react-router-dom";
-import MovieDetails from "../movie-details/movie-details";
 
 export interface Movie {
+  movies: Movie[];
+  searchTerm: string;
   Poster: string;
   imdbID: string;
   Title: string;
@@ -19,57 +23,74 @@ export interface Series {
   Title: string;
   Year: string;
 }
-
-export interface Details {
-  Poster: string;
-  imdbID: string;
-  Title: string;
-  Year: string;
+interface RootState {
+  movie: {
+    movies: Movie[];
+  };
+  series: {
+    series: Series[];
+  };
 }
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const { data } = useGetMoviesQuery("Harry");
-  const { data: seriesData } = useGetSeriesQuery("Friends");
-  console.log(data, "MOVIES");
-  console.log(seriesData, "SERIES");
+
+  const { data: defaultMovies } = useGetMoviesQuery("harry potter");
+  const { data: defaultSeries } = useGetSeriesQuery("marvel");
+  const movies = useSelector((state: RootState) => state.movie.movies);
+  const series = useSelector((state: RootState) => state.series.series);
+
   useEffect(() => {
-    if (data && seriesData) {
-      dispatch(addMovies(data.Search));
-      dispatch(addSeries(seriesData.Search));
+    if (defaultMovies && defaultSeries) {
+      dispatch(addMovies(defaultMovies.Search));
+      dispatch(addSeries(defaultSeries.Search));
     }
-  }, [data, dispatch, seriesData]);
+  }, [dispatch, defaultMovies, defaultSeries]);
 
   return (
     <div>
       <div className="movie-section">
         <h2>Movies</h2>
         <div className="movie-container">
-          {data?.Search?.map((movie: Movie) => (
-            <div key={movie.imdbID} className="movie-card">
-              <Link to={`/movie/${movie.imdbID}`}>
-              {/* <Link to={`/movies/${movie.imdbID}`}> */}
-                <img src={movie.Poster} alt={movie.Title} />
-                <h4>{movie.Title}</h4>
-                <p>{movie.Year}</p>
-              </Link>
-              {console.log(movie.imdbID)}
-            </div>
-          ))}
+          <Slider {...settings}>
+            {movies?.length > 0 ? (
+              movies.map((movie) => (
+                <div key={movie.imdbID} className="movie-card">
+                  <Link to={`/movie/${movie.imdbID}`}>
+                    <img src={movie.Poster} alt={movie.Title} />
+                    <h4>{movie.Title}</h4>
+                    <p>{movie.Year}</p>
+                  </Link>
+                </div>
+              ))
+            ) : (
+              <p>No Movies Found</p>
+            )}
+          </Slider>
         </div>
       </div>
+
       <div className="series-section">
         <h2>Series</h2>
         <div className="movie-container">
-          {seriesData?.Search?.map((series: Series) => (
-            <div key={series.imdbID} className="movie-card">
-              <img src={series.Poster} alt={series.Title} />
-              <h4>{series.Title}</h4>
-              <p>{series.Year}</p>
-            </div>
-          ))}
+          <Slider {...settings}>
+            {series?.length > 0 ? (
+              series.map((serie) => (
+                <div key={serie.imdbID} className="movie-card">
+                  <Link to={`/series/${serie.imdbID}`}>
+                    <img src={serie.Poster} alt={serie.Title} />
+                    <h4>{serie.Title}</h4>
+                    <p>{serie.Year}</p>
+                  </Link>
+                </div>
+              ))
+            ) : (
+              <p>No Series Found</p>
+            )}
+          </Slider>
         </div>
       </div>
+
       <MovieDetails />
     </div>
   );

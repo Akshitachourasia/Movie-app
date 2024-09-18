@@ -8,14 +8,12 @@ h2 {
 }
 
 .movie-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  grid-gap: 20px;
   padding: 20px;
   cursor: pointer;
 }
 
-.movie-section {
+.movie-section,
+.series-section {
   margin-bottom: 40px;
 }
 
@@ -24,6 +22,10 @@ h2 {
   color: $font-primary;
   border-radius: 10px;
   overflow: hidden;
+  min-height: 450px;
+  height: 100%;
+  margin: 10px;
+
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   transition: transform 0.3s ease;

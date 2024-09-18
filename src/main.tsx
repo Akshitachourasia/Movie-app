@@ -6,7 +6,7 @@ import HomePage from "./components/home/home.tsx";
 import MovieDetails from "./components/movie-details/movie-details.tsx";
 import PageNotFound from "./components/page-not-found/page-not-found.tsx";
 import { Provider } from "react-redux";
-import { store }from "./features/store.tsx";
+import { store } from "./features/store.tsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -20,16 +20,17 @@ const router = createBrowserRouter([
         path: "movie/:imdbID",
         element: <MovieDetails />,
       },
-       {
-    path: "*",
-    element: <PageNotFound />,
-  },
+      {
+        path: "series/:imdbID",
+        element: <MovieDetails />,
+      },
+
+      {
+        path: "*",
+        element: <PageNotFound />,
+      },
     ],
   },
-  // {
-  //   path: "*",
-  //   element: <PageNotFound />,
-  // },
 ]);
 
 createRoot(document.getElementById("root")!).render(
