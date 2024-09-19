@@ -1,20 +1,11 @@
-import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useGetMoviesorSeriesDetailsQuery } from "../../services/api";
-import { useDispatch } from "react-redux";
-import { addDetails } from "../../features/movies/movie-slice";
+
 import "./movie-details.scss";
 
 const MovieDetails = () => {
   const { imdbID } = useParams();
   const { data, isLoading } = useGetMoviesorSeriesDetailsQuery(imdbID);
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    if (data) {
-      dispatch(addDetails(data));
-    }
-  }, [data, dispatch]);
 
   if (isLoading) {
     return (

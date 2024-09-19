@@ -1,27 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import user from "../../images/user.png";
 import "./header.scss";
-import { useDispatch } from "react-redux";
-import { useGetMoviesQuery, useGetSeriesQuery } from "../../services/api";
-import { addMovies, addSeries } from "../../features/movies/movie-slice";
 
-const Header = () => {
-  const [search, setSearch] = React.useState("");
-  const { data } = useGetMoviesQuery(search);
-  const { data: seriesData } = useGetSeriesQuery(search);
-  const dispatch = useDispatch();
+interface HeaderProps {
+  setSearchQuery: (search: string) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ setSearchQuery }) => {
+  const [search, setSearch] = useState("");
+
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault();
+    if (search.trim() === "") {
+      alert("Please enter something");
+      return;
+    }
+    if (search) setSearchQuery(search);
     setSearch("");
-    if (search === "") {
-      return alert("Please enter something");
-    }
-    if (data && seriesData) {
-      dispatch(addMovies(data.Search));
-      dispatch(addSeries(seriesData.Search));
-      console.log(data, seriesData);
-    }
   };
 
   return (

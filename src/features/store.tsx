@@ -1,12 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { api } from "../services/api";
-import reducers from "../features/movies/movie-slice";
 export const store = configureStore({
   reducer: {
     [api.reducerPath]: api.reducer,
-    movie: reducers.movie,
-    series: reducers.series,
-    details: reducers.details,
   },
 
   middleware: (getDefaultMiddleware) =>
