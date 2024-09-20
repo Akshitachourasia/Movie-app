@@ -31,6 +31,7 @@ const HomePage = () => {
     isError: movieError,
     isLoading: movieLoading,
   } = useGetMoviesQuery(searchQuery || "harry potter");
+
   const {
     data: SeriesData,
     isError: seriesError,
@@ -41,12 +42,28 @@ const HomePage = () => {
     !MovieData?.Search?.length && !movieLoading && !movieError;
   const noSeriesFound =
     !SeriesData?.Search?.length && !seriesLoading && !seriesError;
-
   const showNoResultsMessage = noMoviesFound && noSeriesFound;
+
+  const renderMediaCards = (
+    data: Movie[] | Series[],
+    type: "movie" | "series"
+  ) => (
+    <Slider {...settings}>
+      {data.map((item) => (
+        <div key={item.imdbID} className="movie-card">
+          <Link to={`/${type}/${item.imdbID}`}>
+            <img src={item.Poster} alt={item.Title} />
+            <h4>{item.Title}</h4>
+            <p>{item.Year}</p>
+          </Link>
+        </div>
+      ))}
+    </Slider>
+  );
 
   return (
     <div>
-      {!showNoResultsMessage && (
+      {!showNoResultsMessage ? (
         <>
           <div className="movie-section">
             <h2>Movies</h2>
@@ -56,19 +73,7 @@ const HomePage = () => {
               {noMoviesFound ? (
                 <p>No Movies Found</p>
               ) : (
-                MovieData?.Search?.length > 0 && (
-                  <Slider {...settings}>
-                    {MovieData.Search.map((movie: Movie) => (
-                      <div key={movie.imdbID} className="movie-card">
-                        <Link to={`/movie/${movie.imdbID}`}>
-                          <img src={movie.Poster} alt={movie.Title} />
-                          <h4>{movie.Title}</h4>
-                          <p>{movie.Year}</p>
-                        </Link>
-                      </div>
-                    ))}
-                  </Slider>
-                )
+                MovieData?.Search && renderMediaCards(MovieData.Search, "movie")
               )}
             </div>
           </div>
@@ -81,25 +86,13 @@ const HomePage = () => {
               {noSeriesFound ? (
                 <p>No Series Found</p>
               ) : (
-                SeriesData?.Search?.length > 0 && (
-                  <Slider {...settings}>
-                    {SeriesData.Search.map((series: Series) => (
-                      <div key={series.imdbID} className="movie-card">
-                        <Link to={`/series/${series.imdbID}`}>
-                          <img src={series.Poster} alt={series.Title} />
-                          <h4>{series.Title}</h4>
-                          <p>{series.Year}</p>
-                        </Link>
-                      </div>
-                    ))}
-                  </Slider>
-                )
+                SeriesData?.Search &&
+                renderMediaCards(SeriesData.Search, "series")
               )}
             </div>
           </div>
         </>
-      )}
-      {showNoResultsMessage && (
+      ) : (
         <div className="no-results">
           <h2>No Movies or Series Found</h2>
           <p>Please try to search for something else.</p>

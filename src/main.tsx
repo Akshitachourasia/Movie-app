@@ -6,25 +6,36 @@ import HomePage from "./components/home/home.tsx";
 import MovieDetails from "./components/movie-details/movie-details.tsx";
 import PageNotFound from "./components/page-not-found/page-not-found.tsx";
 import { Provider } from "react-redux";
-import { store } from "./features/store.tsx";
+import { store } from "./store/store.tsx";
+import LoginPage from "./pages/login/login.tsx";
+import SignUpPage from "./pages/signup/signup.tsx";
+import PrivateGuard from "./guards/private-guard.tsx";
+
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
       {
-        path: "/",
-        element: <HomePage />,
+        path: "/dashboard",
+        element: (
+          <PrivateGuard>
+            <HomePage />
+          </PrivateGuard>
+        ),
       },
       {
-        path: "movie/:imdbID",
-        element: <MovieDetails />,
+        path: "login",
+        element: <LoginPage />,
       },
       {
-        path: "series/:imdbID",
+        path: "signup",
+        element: <SignUpPage />,
+      },
+      {
+        path: ":type/:imdbID",
         element: <MovieDetails />,
       },
-
       {
         path: "*",
         element: <PageNotFound />,
