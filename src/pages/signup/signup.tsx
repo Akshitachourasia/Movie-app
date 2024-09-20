@@ -104,7 +104,7 @@ const Signup: React.FC = () => {
           >
             Already have an account?
             <Button
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/auth/login")}
               sx={{ textTransform: "none", padding: 0 }}
             >
               Login

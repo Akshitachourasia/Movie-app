@@ -71,7 +71,7 @@ const Login: React.FC = () => {
           >
             Don't have an account?
             <Button
-              onClick={() => navigate("/signup")}
+              onClick={() => navigate("/auth/signup")}
               sx={{ textTransform: "none", padding: 0 }}
             >
               Sign Up

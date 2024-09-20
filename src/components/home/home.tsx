@@ -18,13 +18,13 @@ export interface Series {
   Title: string;
   Year: string;
 }
-
 interface OutletContext {
-  searchQuery: string;
+  searchQuery?: string;
 }
 
 const HomePage = () => {
-  const { searchQuery } = useOutletContext<OutletContext>();
+  const outletContext = useOutletContext<OutletContext | null>();
+  const searchQuery = outletContext?.searchQuery || "";
 
   const {
     data: MovieData,
