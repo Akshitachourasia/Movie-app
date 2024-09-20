@@ -19,7 +19,7 @@ export const WelcomePage = () => {
       <h1>Welcome to Movie App</h1>
       <p>Explore the world of movies and series!</p>
       <br />
-      <Button variant="contained" component={Link} to="/auth/login">
+      <Button variant="contained" component={Link} to="/auth/signup">
         Get Started...
       </Button>
     </div>

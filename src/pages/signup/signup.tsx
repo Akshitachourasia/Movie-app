@@ -6,6 +6,7 @@ import {
   Container,
   Box,
   CssBaseline,
+  Alert,
 } from "@mui/material";
 import { signup } from "../../slice/slice";
 import { useDispatch } from "react-redux";
@@ -17,17 +18,51 @@ const Signup: React.FC = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const validatePhone = (phone: string) => {
+    return /^[0-9]{10}$/.test(phone);
+  };
+
   const handleSignup = () => {
-    if (password === confirmPassword) {
-      alert(`Account created for ${username}`);
-      dispatch(signup({ username, password, email, phone }));
-      localStorage.setItem("isAuthenticated", "true");
-      navigate("/dashboard");
-    } else {
-      alert("Passwords do not match");
+    if (!username || !email || !phone || !password || !confirmPassword) {
+      setError("All fields are required.");
+      return;
     }
+
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email.");
+      return;
+    }
+
+    if (!validatePhone(phone)) {
+      setError("Please enter a valid 10-digit phone number.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Password should be at least 6 characters long.");
+      return;
+    }
+
+    setError(null);
+    alert(`Account created for ${username}`);
+    dispatch(signup({ username, password, email, phone }));
+    localStorage.setItem("isAuthenticated", "true");
+    localStorage.setItem("username", username);
+    localStorage.setItem("password", password);
+    navigate("/auth/login");
   };
 
   return (
@@ -89,6 +124,13 @@ const Signup: React.FC = () => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
+
+          {error && (
+            <Alert severity="error" sx={{ width: "100%", mt: 2 }}>
+              {error}
+            </Alert>
+          )}
+
           <Button
             type="button"
             fullWidth

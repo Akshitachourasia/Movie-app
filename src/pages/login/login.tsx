@@ -7,6 +7,7 @@ import {
   Container,
   Box,
   CssBaseline,
+  Alert,
 } from "@mui/material";
 import { login } from "../../slice/slice";
 import { useNavigate } from "react-router-dom";
@@ -14,13 +15,23 @@ import { useNavigate } from "react-router-dom";
 const Login: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const handleLogin = () => {
-    if (username === "admin" && password === "password") {
-      dispatch(login(username));
-      localStorage.setItem("isAuthenticated", "true");
+    if (!username || !password) {
+      setError("All fields are required");
+      return;
+    }
+    const storedUsername = localStorage.getItem("username");
+    const storedPassword = localStorage.getItem("password");
+
+    if (username === storedUsername && password === storedPassword) {
+      dispatch(login({ username, password }));
       navigate("/dashboard");
+    } else {
+      setError("Invalid username or password");
     }
   };
 
@@ -56,6 +67,11 @@ const Login: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          {error && (
+            <Alert severity="error" sx={{ width: "100%", mt: 2 }}>
+              {error}
+            </Alert>
+          )}
           <Button
             type="button"
             fullWidth

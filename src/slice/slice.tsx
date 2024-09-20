@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface AuthState {
   isLoggedIn: boolean;
-  user: { email: string } | null;
+  user: { username: string; password: string } | null;
   error: string | null;
   isAuthenticated: boolean;
 }
@@ -20,11 +20,19 @@ const authSlice = createSlice({
   reducers: {
     login(state, action) {
       state.isAuthenticated = true;
-      state.user = { email: action.payload.email };
+      state.user = {
+        password: action.payload.password,
+        username: action.payload.username,
+      };
+      console.log(state.user.password, "PASSWORD");
+      console.log(state.user.username, "USERNAME");
     },
     signup(state, action) {
       state.isAuthenticated = true;
-      state.user = { email: action.payload.email };
+      state.user = {
+        password: action.payload.password,
+        username: action.payload.username,
+      };
     },
     logout: (state) => {
       state.isLoggedIn = false;
